@@ -1,5 +1,21 @@
 ---
 
+- name: create dump directory
+  file:
+    path: "{{ home_base }}/carlos/foo"
+    owner: carlos
+    group: carlos
+    mode: 0755
+    state: directory
+  register: dumpCreated
+
+- name: restart service only when foo directory is created
+  service:
+    name: filebeat.service
+    state: restarted
+    enabled: false
+  when: dumpCreated|changed
+
 - name: create users directory
   file:
     path: "{{ home_base }}"

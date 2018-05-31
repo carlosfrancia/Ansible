@@ -1,0 +1,17 @@
+---
+## for testing the tooling code
+
+- hosts: localhost
+  gather_facts: false
+
+  roles:
+    - aws-private-instance
+
+- name: Create users
+  hosts: private-servers
+  become: yes
+  become_user: root
+  remote_user: ec2-user
+  roles:
+    - users
+
