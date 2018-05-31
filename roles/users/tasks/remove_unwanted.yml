@@ -1,0 +1,12 @@
+---
+
+- name: get existing users
+  shell: 'grep sysadmins /etc/group | cut -d: -f4 | tr "," "\n"'
+  changed_when: false
+  register: existing_users
+
+- name: remove unwanted users from the server
+  user:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ existing_users.stdout_lines | difference ( users  ) }}"

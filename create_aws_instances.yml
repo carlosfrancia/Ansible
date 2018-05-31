@@ -1,0 +1,8 @@
+---
+## for testing the tooling code
+
+- hosts: localhost
+  gather_facts: false
+
+  roles:
+    - aws

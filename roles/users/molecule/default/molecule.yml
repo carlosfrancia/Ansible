@@ -1,0 +1,43 @@
+---
+
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: users
+    image: nexus:5555/centos7
+    groups:
+      - tooling
+    command: /usr/sbin/init
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    security_opts:
+      - seccomp:unconfined
+    privileged: true
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES: /etc/anisble/roles/
+  inventory:
+    links:
+      group_vars: ../../../../../group_vars/
+  options:
+    vault-password-file: ~/.vault
+    skip-tags: server_only
+
+scenario:
+  name: default
+
+verifier:
+  name: testinfra
+  options:
+    v: true
+    sudo: true
+  lint:
+    name: flake8

@@ -1,0 +1,13 @@
+---
+
+- name: Start elastic search container
+  docker_container:
+    name: elastic_search
+    image: "{{ es_image }}"
+    state: started
+    detach: True
+    ports:
+     - "9200:9200"
+     - "9300:9300"
+    env:
+        discovery.type: single-node 

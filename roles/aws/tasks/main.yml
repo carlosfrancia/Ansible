@@ -1,0 +1,5 @@
+---
+
+- include_tasks: security_group.yml
+
+- include_tasks: server.yml

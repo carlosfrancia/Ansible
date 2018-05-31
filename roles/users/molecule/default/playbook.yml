@@ -1,0 +1,33 @@
+---
+
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: Search for unreachable repos when testing within a container
+      find:
+        paths: /etc/yum.repos.d/
+        patterns: CentOS*.repo
+      register: repos_to_delete
+
+    - name: Remove unreachable repos
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ repos_to_delete.files }}"
+
+  roles:
+    - common
+    - users
+
+  post_tasks:
+    - name: Install pre-requisite packages used by ansible
+      yum:
+        name: "{{ item }}"
+        state: latest
+      tags:
+        - skip_ansible_lint
+      with_items:
+        - sudo
+        - systemd
+        - net-tools

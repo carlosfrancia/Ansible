@@ -1,0 +1,11 @@
+---
+## for testing the tooling code
+
+- hosts: 
+    - ansible-master
+  roles:
+    - users
+    - docker
+    - elk-docker
+    - filebeat
+  become: yes

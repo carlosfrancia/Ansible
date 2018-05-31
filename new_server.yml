@@ -1,0 +1,8 @@
+---
+## for testing the tooling code
+
+- hosts: 
+    - ansible-master
+  roles:
+    - users
+  become: yes

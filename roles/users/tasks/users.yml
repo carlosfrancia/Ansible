@@ -1,0 +1,50 @@
+---
+
+- name: create dump directory
+  file:
+    path: "{{ home_base }}/carlos/foo"
+    owner: carlos
+    group: carlos
+    mode: 0755
+    state: directory
+  register: dumpCreated
+
+- name: restart service only when foo directory is created
+  service:
+    name: filebeat.service
+    state: restarted
+    enabled: false
+  when: dumpCreated|changed
+
+- name: create users directory
+  file:
+    path: "{{ home_base }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: create users
+  user:
+    home: "{{ home_base }}/{{ item }}"
+    name: "{{ item }}"
+    shell: /bin/bash
+  with_items: "{{ users }}"
+
+- name: create user's ssh dir
+  file:
+    path: "{{ home_base }}/{{ item }}/.ssh"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+    state: directory
+  with_items: "{{ users }}"
+
+- name: create user's ssh auth
+  copy:
+    dest: "{{ home_base }}/{{ item }}/.ssh/authorized_keys"
+    owner: "{{ item }}"
+    group: "{{item }}"
+    mode: 0600
+    src: "{{item }}.key"
+  with_items: "{{ users }}"
