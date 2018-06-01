@@ -1,6 +1,6 @@
-# Ansible POC
+# Ansible
 
-Repository for Ansible proof of concepts.
+Ansible roles repository.
 
 ## Roles
 
